@@ -1,0 +1,202 @@
+/* One stylesheet, no JavaScript anywhere on this site. */
+
+:root {
+  --bg: #fdfdfc;
+  --fg: #1a1a18;
+  --muted: #6b6b66;
+  --rule: #e2e2dd;
+  --link: #14508c;
+  --code-bg: #f2f2ee;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16161a;
+    --fg: #e6e6e1;
+    --muted: #9a9a93;
+    --rule: #2e2e34;
+    --link: #82b5e8;
+    --code-bg: #202027;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+  max-width: 40rem;
+  background: var(--bg);
+  color: var(--fg);
+  font: 1.0625rem/1.65 Charter, Georgia, Cambria, "Times New Roman", serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+a { color: var(--link); }
+a:hover { text-decoration: none; }
+
+/* Header ------------------------------------------------------------------ */
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.site-name {
+  font-weight: 600;
+  font-size: 1.0625rem;
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.site-header nav a {
+  margin-left: 1rem;
+  font-size: 0.9375rem;
+}
+.site-header nav a:first-child { margin-left: 0; }
+
+/* Typography -------------------------------------------------------------- */
+
+h1 {
+  font-size: 1.75rem;
+  line-height: 1.25;
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin: 2.5rem 0 0.75rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 1.0625rem;
+  margin: 2rem 0 0.5rem;
+  font-weight: 600;
+}
+
+p, ul, ol { margin: 0 0 1.25rem; }
+
+blockquote {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid var(--rule);
+  color: var(--muted);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 2.5rem 0;
+}
+
+.tagline, .blurb {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.meta {
+  color: var(--muted);
+  font-size: 0.875rem;
+  margin: 0 0 2rem;
+}
+
+/* Epistemic status -------------------------------------------------------- */
+
+.status {
+  font-size: 0.9375rem;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0.6rem 0.85rem;
+  margin: 0 0 2rem;
+}
+
+/* Entry lists ------------------------------------------------------------- */
+
+.entry-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+}
+
+.entry-list li {
+  display: flex;
+  gap: 0.85rem;
+  align-items: baseline;
+  padding: 0.3rem 0;
+}
+
+.entry-list time {
+  flex: none;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Code -------------------------------------------------------------------- */
+
+code, pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875em;
+}
+
+code {
+  background: var(--code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+pre {
+  background: var(--code-bg);
+  padding: 0.9rem 1rem;
+  border-radius: 4px;
+  overflow-x: auto;   /* long lines scroll here, never the page */
+  line-height: 1.5;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Tables ------------------------------------------------------------------ */
+
+/* Wrapped so wide tables scroll inside themselves rather than the document. */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1.5rem;
+  font-size: 0.9375rem;
+  display: block;
+  overflow-x: auto;
+}
+
+th, td {
+  text-align: left;
+  padding: 0.45rem 0.75rem 0.45rem 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+th { font-weight: 600; }
+
+img { max-width: 100%; height: auto; }
+
+/* Footer ------------------------------------------------------------------ */
+
+.site-footer {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.875rem;
+}

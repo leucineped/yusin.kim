@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Yusin Kim</title>
+    <link>https://example.com/</link>
+    <description>Measurements and notes on AI agents, tooling, and research workflow, written by a physician-researcher.</description>
+    <language>en</language>
+    <lastBuildDate>Sat, 01 Aug 2026 06:35:33 +0000</lastBuildDate>
+    <atom:link href="https://example.com/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Colophon</title>
+      <link>https://example.com/notes/colophon/</link>
+      <guid isPermaLink="true">https://example.com/notes/colophon/</guid>
+      <pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
+      <description>How this site is built.</description>
+    </item>
+  </channel>
+</rss>

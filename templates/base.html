@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="$lang">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>$title</title>
+<meta name="description" content="$description">
+<meta name="author" content="$author">
+<link rel="canonical" href="$canonical">
+<meta property="og:type" content="website">
+<meta property="og:title" content="$title">
+<meta property="og:description" content="$description">
+<meta property="og:url" content="$canonical">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="$site_title" href="/rss.xml">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="site-name" href="/">$site_title</a>
+  <nav>
+    <a href="/posts/">Writing</a>
+    <a href="/notes/">Notes</a>
+    <a href="/rss.xml">RSS</a>
+  </nav>
+</header>
+
+<main>
+$content
+</main>
+
+<footer class="site-footer">
+  <p>&copy; $year $author. <a href="/rss.xml">RSS</a></p>
+</footer>
+</body>
+</html>
