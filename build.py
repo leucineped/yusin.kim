@@ -156,11 +156,6 @@ class Page:
         return self.date.strftime("%Y-%m-%d")
 
     @property
-    def human_date(self) -> str:
-        return self.date.strftime("%B %-d, %Y") if sys.platform != "win32" \
-            else self.date.strftime("%B %d, %Y").replace(" 0", " ")
-
-    @property
     def full_url(self) -> str:
         return CONFIG["site_url"].rstrip("/") + self.url
 
@@ -200,7 +195,6 @@ def render_entry(page: Page) -> str:
     return tpl.substitute(
         title=html.escape(page.title),
         iso_date=page.iso_date,
-        human_date=page.human_date,
         words=f"{page.words:,}",
         status=status_html,
         content=page.html,

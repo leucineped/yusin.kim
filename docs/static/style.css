@@ -1,22 +1,26 @@
-/* One stylesheet, no JavaScript anywhere on this site. */
+/* One stylesheet, no JavaScript anywhere on this site.
+   Serif body, monospace for anything that is data: dates, table headers,
+   status labels, word counts. */
 
 :root {
-  --bg: #fdfdfc;
-  --fg: #1a1a18;
-  --muted: #6b6b66;
-  --rule: #e2e2dd;
-  --link: #14508c;
-  --code-bg: #f2f2ee;
+  --bg: #faf9f6;
+  --fg: #22201c;
+  --muted: #78736a;
+  --rule: #ddd8cd;
+  --rule-strong: #22201c;
+  --link: #8a4b1f;
+  --code-bg: #efece4;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #16161a;
-    --fg: #e6e6e1;
-    --muted: #9a9a93;
-    --rule: #2e2e34;
-    --link: #82b5e8;
-    --code-bg: #202027;
+    --bg: #1a1815;
+    --fg: #e8e3da;
+    --muted: #9a9287;
+    --rule: #35302a;
+    --rule-strong: #e8e3da;
+    --link: #d99a63;
+    --code-bg: #242019;
   }
 }
 
@@ -25,55 +29,70 @@
 body {
   margin: 0 auto;
   padding: 2rem 1.25rem 4rem;
-  max-width: 40rem;
+  max-width: 38rem;
   background: var(--bg);
   color: var(--fg);
-  font: 1.0625rem/1.65 Charter, Georgia, Cambria, "Times New Roman", serif;
+  font: 1.0625rem/1.7 Charter, Georgia, Cambria, "Times New Roman", serif;
   -webkit-text-size-adjust: 100%;
 }
 
 a { color: var(--link); }
 a:hover { text-decoration: none; }
 
+/* The monospace voice — used for data, never for prose. */
+.site-name,
+.site-header nav a,
+.meta,
+.status,
+.entry-list time,
+th,
+code, pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
 /* Header ------------------------------------------------------------------ */
 
 .site-header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.25rem;
-  align-items: baseline;
-  justify-content: space-between;
-  padding-bottom: 1rem;
+  padding-bottom: 0.9rem;
   margin-bottom: 2.5rem;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 2px solid var(--rule-strong);
 }
 
 .site-name {
+  display: inline-block;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   font-weight: 600;
-  font-size: 1.0625rem;
   color: var(--fg);
   text-decoration: none;
 }
 
-.site-header nav a {
-  margin-left: 1rem;
-  font-size: 0.9375rem;
+.site-header nav {
+  margin-top: 0.5rem;
 }
-.site-header nav a:first-child { margin-left: 0; }
+
+.site-header nav a {
+  margin-right: 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
 
 /* Typography -------------------------------------------------------------- */
 
 h1 {
-  font-size: 1.75rem;
-  line-height: 1.25;
-  margin: 0 0 0.5rem;
+  font-size: 1.8rem;
+  line-height: 1.22;
+  margin: 0 0 0.6rem;
   font-weight: 600;
 }
 
 h2 {
-  font-size: 1.25rem;
-  margin: 2.5rem 0 0.75rem;
+  font-size: 1.3rem;
+  margin: 2.75rem 0 0.75rem;
   font-weight: 600;
+  line-height: 1.3;
 }
 
 h3 {
@@ -83,40 +102,45 @@ h3 {
 }
 
 p, ul, ol { margin: 0 0 1.25rem; }
+li { margin-bottom: 0.35rem; }
 
 blockquote {
-  margin: 1.5rem 0;
+  margin: 1.75rem 0;
   padding-left: 1rem;
   border-left: 3px solid var(--rule);
   color: var(--muted);
 }
 
+blockquote p:last-child { margin-bottom: 0; }
+
 hr {
   border: 0;
   border-top: 1px solid var(--rule);
-  margin: 2.5rem 0;
+  margin: 2.75rem 0;
 }
 
 .tagline, .blurb {
   color: var(--muted);
-  margin-bottom: 2rem;
+  margin-bottom: 2.25rem;
 }
+
+/* Entry metadata ---------------------------------------------------------- */
 
 .meta {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--muted);
-  font-size: 0.875rem;
-  margin: 0 0 2rem;
+  margin: 0 0 1.8rem;
 }
 
-/* Epistemic status -------------------------------------------------------- */
-
 .status {
-  font-size: 0.9375rem;
+  font-size: 0.75rem;
+  line-height: 1.6;
   color: var(--muted);
-  border: 1px solid var(--rule);
-  border-radius: 3px;
-  padding: 0.6rem 0.85rem;
-  margin: 0 0 2rem;
+  border-left: 3px solid var(--rule);
+  padding: 0.2rem 0 0.2rem 0.8rem;
+  margin: 0 0 1.8rem;
 }
 
 /* Entry lists ------------------------------------------------------------- */
@@ -129,38 +153,37 @@ hr {
 
 .entry-list li {
   display: flex;
-  gap: 0.85rem;
+  gap: 0.9rem;
   align-items: baseline;
-  padding: 0.3rem 0;
+  padding: 0.35rem 0;
+  margin-bottom: 0;
 }
 
 .entry-list time {
   flex: none;
   color: var(--muted);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 /* Code -------------------------------------------------------------------- */
 
-code, pre {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.875em;
-}
+code, pre { font-size: 0.875em; }
 
 code {
   background: var(--code-bg);
   padding: 0.1em 0.35em;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 pre {
   background: var(--code-bg);
   padding: 0.9rem 1rem;
-  border-radius: 4px;
+  border-radius: 3px;
   overflow-x: auto;   /* long lines scroll here, never the page */
-  line-height: 1.5;
+  line-height: 1.55;
+  margin: 0 0 1.5rem;
 }
 
 pre code {
@@ -170,7 +193,7 @@ pre code {
 
 /* Tables ------------------------------------------------------------------ */
 
-/* Wrapped so wide tables scroll inside themselves rather than the document. */
+/* Wide tables scroll inside themselves rather than the document. */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -180,14 +203,24 @@ table {
   overflow-x: auto;
 }
 
+th {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  border-bottom: 2px solid var(--rule-strong);
+  white-space: nowrap;
+}
+
 th, td {
   text-align: left;
-  padding: 0.45rem 0.75rem 0.45rem 0;
+  padding: 0.45rem 0.9rem 0.45rem 0;
   border-bottom: 1px solid var(--rule);
   vertical-align: top;
 }
 
-th { font-weight: 600; }
+td { font-variant-numeric: tabular-nums; }
 
 img { max-width: 100%; height: auto; }
 
@@ -198,5 +231,5 @@ img { max-width: 100%; height: auto; }
   padding-top: 1rem;
   border-top: 1px solid var(--rule);
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
