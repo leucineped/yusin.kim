@@ -3,5 +3,6 @@
   <url><loc>https://example.com/</loc></url>
   <url><loc>https://example.com/posts/</loc></url>
   <url><loc>https://example.com/notes/</loc></url>
+  <url><loc>https://example.com/etc/</loc></url>
   <url><loc>https://example.com/notes/colophon/</loc><lastmod>2026-08-01</lastmod></url>
 </urlset>

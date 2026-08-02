@@ -16,8 +16,9 @@ Static site generator in one Python file. No framework, no JavaScript, no databa
 
 ## Writing
 
-Put a Markdown file in `content/posts/` (longer pieces) or `content/notes/`
-(short, rough). Front matter goes at the top between `---` lines:
+Put a Markdown file in `content/posts/` (longer pieces), `content/notes/`
+(short, rough), or `content/etc/` (films, books, anything that is not work).
+Front matter goes at the top between `---` lines:
 
 ```markdown
 ---
@@ -37,6 +38,9 @@ file out of the build.
 `status` is optional and can be `seedling`, `budding`, or `evergreen`. It renders
 as a labelled box at the top of the page — a fixed place to put uncertainty so
 individual sentences do not have to hedge.
+
+`lang` is optional. The site default is `CONFIG["lang"]`; put `lang: ko` on a
+Korean entry so the page is not served as English.
 
 ## Build
 
@@ -68,8 +72,19 @@ static/style.css      the only stylesheet
 content/
   posts/              longer pieces
   notes/              short, rough
+  etc/                films, books, not work
 docs/                 generated output, served by GitHub Pages
 ```
+
+Sections are declared in `SECTIONS` in `build.py`. Adding one there creates its
+directory listing, its nav link, and its sitemap entry — nothing else to edit.
+
+## Analytics
+
+`CONFIG["analytics"]` is raw HTML injected before `</body>` on every page. Empty
+means no third-party script runs on the site at all. Paste a beacon snippet there
+to turn measurement on; delete it to turn measurement off. There is no other
+place in the build where a third-party script can enter.
 
 ## What is already handled
 

@@ -40,11 +40,17 @@ CONFIG = {
         "Measurements and notes on AI agents, tooling, and research workflow, "
         "written by a physician-researcher."
     ),
+    # Default page language. Any entry can override it with `lang:` in front
+    # matter — a Korean film note should not be served as lang="en".
     "lang": "en",
+    # Raw HTML injected before </body> on every page. Analytics beacon goes
+    # here. Empty string means no third-party script runs on the site at all.
+    "analytics": "",
 }
 
-# Two layers. Cheap notes support expensive posts — this is what keeps the site
-# alive when clinical work eats the week.
+# Three layers. Cheap notes support expensive posts — this is what keeps the
+# site alive when clinical work eats the week. Etc. keeps everything else off
+# the front of the other two without hiding it.
 SECTIONS = {
     "posts": {
         "title": "Writing",
@@ -53,6 +59,10 @@ SECTIONS = {
     "notes": {
         "title": "Notes",
         "blurb": "Short, rougher, often unfinished. Things I am still working out.",
+    },
+    "etc": {
+        "title": "Etc.",
+        "blurb": "Films, books, and whatever else. Not work.",
     },
 }
 
@@ -120,6 +130,7 @@ class Page:
         self.description = meta.get("description", "")
         self.status = meta.get("status", "").lower()
         self.draft = meta.get("draft", "").lower() in ("true", "yes", "1")
+        self.lang = meta.get("lang") or CONFIG["lang"]
 
         self.date = self._parse_date(meta.get("date"), path)
         self.slug = meta.get("slug") or self._slug_from(path)
@@ -168,19 +179,34 @@ def load_template(name: str) -> Template:
     return Template((TEMPLATES / name).read_text(encoding="utf-8"))
 
 
-def render_page(inner: str, *, title: str, description: str, url_path: str) -> str:
+def render_nav() -> str:
+    """Nav comes from SECTIONS so that adding a section touches one file."""
+    links = [
+        f'    <a href="/{s}/">{html.escape(info["title"])}</a>'
+        for s, info in SECTIONS.items()
+    ]
+    links.append('    <a href="/rss.xml">RSS</a>')
+    return "\n".join(links)
+
+
+def render_page(
+    inner: str, *, title: str, description: str, url_path: str, lang: str | None = None
+) -> str:
     base = load_template("base.html")
     site_title = CONFIG["title"]
     full_title = title if title == site_title else f"{title} — {site_title}"
     return base.substitute(
-        lang=CONFIG["lang"],
+        lang=lang or CONFIG["lang"],
         title=html.escape(full_title),
         description=html.escape(description or CONFIG["description"]),
         canonical=CONFIG["site_url"].rstrip("/") + url_path,
         site_title=html.escape(site_title),
+        nav=render_nav(),
         content=inner,
         year=datetime.now().year,
         author=html.escape(CONFIG["author"]),
+        # Substituted values are not rescanned, so a `$` inside the snippet is safe.
+        analytics=CONFIG.get("analytics", ""),
     )
 
 
@@ -331,6 +357,7 @@ def build() -> None:
                     title=page.title,
                     description=page.description,
                     url_path=page.url,
+                    lang=page.lang,
                 ),
             )
 

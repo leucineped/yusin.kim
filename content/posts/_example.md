@@ -16,6 +16,7 @@ Delete this file, or set `draft: true` to `false` to publish it.
 | `date` | `YYYY-MM-DD`. Falls back to a date prefix on the filename, then to file mtime. |
 | `description` | One line. Used for `<meta name="description">` and the RSS description. Matters for search. |
 | `status` | Optional: `seedling`, `budding`, or `evergreen`. Omit for no label. |
+| `lang` | Optional BCP 47 code, e.g. `ko`. Overrides the site default for this page only. Set it on Korean entries. |
 | `slug` | Optional. Overrides the URL, which otherwise comes from the filename. |
 | `draft` | `true` keeps the file out of the build. |
 
