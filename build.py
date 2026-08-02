@@ -33,7 +33,10 @@ CONFIG = {
     # No trailing slash. Used for RSS, sitemap, and canonical URLs.
     "site_url": "https://example.com",
     "title": "Yusin Kim",
-    "tagline": "Notes and measurements from a physician using AI agents for research.",
+    "tagline": (
+        "A pediatric allergist, some coding agents, "
+        "and an inappropriate amount of measurement."
+    ),
     "author": "Yusin Kim",
     # Shown in the RSS feed and the homepage <meta name="description">.
     "description": (
