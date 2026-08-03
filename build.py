@@ -426,9 +426,14 @@ def build() -> None:
 
     # GitHub Pages reads CNAME from the root of the published directory, not
     # from static/. Generate it from site_url so the two can never disagree.
+    #
+    # Setting a custom domain in the Pages UI or API makes GitHub commit this
+    # same file itself, so the two writers must agree byte for byte or every
+    # domain change collides with the next build. GitHub writes the bare host
+    # with no trailing newline; write_text would add a CRLF on Windows.
     host = urlsplit(CONFIG["site_url"]).netloc
     if host:
-        write(OUT / "CNAME", host + "\n")
+        (OUT / "CNAME").write_text(host, encoding="utf-8", newline="")
 
     if STATIC.exists():
         shutil.copytree(STATIC, OUT / "static", dirs_exist_ok=True)
