@@ -233,3 +233,11 @@ img { max-width: 100%; height: auto; }
   color: var(--muted);
   font-size: 0.8125rem;
 }
+
+/* Author, affiliation, ORCID. The path from the writing back to the person. */
+.site-footer .identity {
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+}
+
+.site-footer .identity-name { color: var(--fg); }

@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 from email.utils import format_datetime
 from pathlib import Path
 from string import Template
+from urllib.parse import urlsplit
 
 import mistune
 
@@ -31,13 +32,20 @@ import mistune
 
 CONFIG = {
     # No trailing slash. Used for RSS, sitemap, and canonical URLs.
-    "site_url": "https://example.com",
+    "site_url": "https://yusin.kim",
     "title": "Yusin Kim",
     "tagline": (
         "A pediatric allergist, some coding agents, "
         "and an inappropriate amount of measurement."
     ),
     "author": "Yusin Kim",
+    # Footer identity. One line per element; leave the tuple empty to omit the
+    # block entirely. `orcid` is the bare identifier, not a URL.
+    "affiliation": (
+        "Division of Allergy and Pulmonology, Department of Pediatrics",
+        "Ajou University School of Medicine, Suwon, Republic of Korea",
+    ),
+    "orcid": "0000-0002-0303-8907",
     # Shown in the RSS feed and the homepage <meta name="description">.
     "description": (
         "Measurements and notes on AI agents, tooling, and research workflow, "
@@ -48,7 +56,10 @@ CONFIG = {
     "lang": "en",
     # Raw HTML injected before </body> on every page. Analytics beacon goes
     # here. Empty string means no third-party script runs on the site at all.
-    "analytics": "",
+    "analytics": (
+        '<script data-goatcounter="https://leucine.goatcounter.com/count"\n'
+        '        async src="//gc.zgo.at/count.js"></script>'
+    ),
 }
 
 # Three layers. Cheap notes support expensive posts — this is what keeps the
@@ -192,6 +203,22 @@ def render_nav() -> str:
     return "\n".join(links)
 
 
+def render_identity() -> str:
+    """Author, affiliation, ORCID. Each element is omitted when unset.
+
+    This is the path from the writing back to the person. A site whose output
+    travels further than its author is a known failure mode.
+    """
+    lines = [f'<span class="identity-name">{html.escape(CONFIG["author"])}</span>']
+    lines += [html.escape(line) for line in CONFIG.get("affiliation", ())]
+    orcid = CONFIG.get("orcid", "")
+    if orcid:
+        lines.append(
+            f'<a href="https://orcid.org/{html.escape(orcid)}">ORCID {html.escape(orcid)}</a>'
+        )
+    return '<p class="identity">' + "<br>\n  ".join(lines) + "</p>"
+
+
 def render_page(
     inner: str, *, title: str, description: str, url_path: str, lang: str | None = None
 ) -> str:
@@ -205,6 +232,7 @@ def render_page(
         canonical=CONFIG["site_url"].rstrip("/") + url_path,
         site_title=html.escape(site_title),
         nav=render_nav(),
+        identity=render_identity(),
         content=inner,
         year=datetime.now().year,
         author=html.escape(CONFIG["author"]),
@@ -395,6 +423,12 @@ def build() -> None:
 
     # GitHub Pages: stop Jekyll from touching the output.
     write(OUT / ".nojekyll", "")
+
+    # GitHub Pages reads CNAME from the root of the published directory, not
+    # from static/. Generate it from site_url so the two can never disagree.
+    host = urlsplit(CONFIG["site_url"]).netloc
+    if host:
+        write(OUT / "CNAME", host + "\n")
 
     if STATIC.exists():
         shutil.copytree(STATIC, OUT / "static", dirs_exist_ok=True)

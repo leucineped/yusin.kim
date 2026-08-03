@@ -58,8 +58,10 @@ python build.py --serve    # writes docs/, then serves http://localhost:8000
 2. Push this directory to it.
 3. Repo → Settings → Pages → Source: **Deploy from a branch**, branch `main`,
    folder **`/docs`**.
-4. For a custom domain: Settings → Pages → Custom domain. Add a `CNAME` file
-   containing your domain to `static/`, so it survives rebuilds.
+4. For a custom domain: Settings → Pages → Custom domain. `docs/CNAME` is
+   generated from `CONFIG["site_url"]` on every build, so the two cannot
+   disagree. Do not hand-write it, and do not put it in `static/` — that lands
+   at `docs/static/CNAME`, where Pages does not look.
 
 ## Layout
 
