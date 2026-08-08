@@ -4,7 +4,6 @@ date: 2026-08-08
 description: "Firecrawl의 anydoc을 한국어 의료 문서로 고문 테스트했다. 무엇이 살아남고, 무엇이 깨지고, 왜 한국어 PDF가 최악의 케이스인가."
 status: budding
 lang: ko
-draft: true
 ---
 
 ```

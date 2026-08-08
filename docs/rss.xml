@@ -5,8 +5,22 @@
     <link>https://yusin.kim/</link>
     <description>Measurements and notes on AI agents, tooling, and research workflow, written by a physician-researcher.</description>
     <language>en</language>
-    <lastBuildDate>Mon, 03 Aug 2026 03:25:01 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 08 Aug 2026 07:17:00 +0000</lastBuildDate>
     <atom:link href="https://yusin.kim/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>anydoc: 어떤 문서든 넣으면 마크다운 — 한국어 문서를 넣어봤다</title>
+      <link>https://yusin.kim/posts/anydoc-korean-documents-ko/</link>
+      <guid isPermaLink="true">https://yusin.kim/posts/anydoc-korean-documents-ko/</guid>
+      <pubDate>Sat, 08 Aug 2026 00:00:00 +0000</pubDate>
+      <description>Firecrawl의 anydoc을 한국어 의료 문서로 고문 테스트했다. 무엇이 살아남고, 무엇이 깨지고, 왜 한국어 PDF가 최악의 케이스인가.</description>
+    </item>
+    <item>
+      <title>anydoc says any document in, Markdown out. I fed it Korean documents.</title>
+      <link>https://yusin.kim/posts/anydoc-korean-documents/</link>
+      <guid isPermaLink="true">https://yusin.kim/posts/anydoc-korean-documents/</guid>
+      <pubDate>Sat, 08 Aug 2026 00:00:00 +0000</pubDate>
+      <description>An agent-run torture test of Firecrawl&#x27;s anydoc against Korean medical documents: what survives, what breaks, and why Korean PDFs are the worst case for every extractor.</description>
+    </item>
     <item>
       <title>I set the wrong question for the model</title>
       <link>https://yusin.kim/posts/i-set-the-wrong-question-for-the-model/</link>

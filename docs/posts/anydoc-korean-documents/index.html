@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>anydoc says any document in, Markdown out. I fed it Korean documents. — Yusin Kim</title>
+<meta name="description" content="An agent-run torture test of Firecrawl&#x27;s anydoc against Korean medical documents: what survives, what breaks, and why Korean PDFs are the worst case for every extractor.">
+<meta name="author" content="Yusin Kim">
+<link rel="canonical" href="https://yusin.kim/posts/anydoc-korean-documents/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="anydoc says any document in, Markdown out. I fed it Korean documents. — Yusin Kim">
+<meta property="og:description" content="An agent-run torture test of Firecrawl&#x27;s anydoc against Korean medical documents: what survives, what breaks, and why Korean PDFs are the worst case for every extractor.">
+<meta property="og:url" content="https://yusin.kim/posts/anydoc-korean-documents/">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="Yusin Kim" href="/rss.xml">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="site-name" href="/">Yusin Kim</a>
+  <nav>
+    <a href="/posts/">Writing</a>
+    <a href="/notes/">Notes</a>
+    <a href="/etc/">Etc.</a>
+    <a href="/rss.xml">RSS</a>
+  </nav>
+</header>
+
+<main>
+<article>
+  <h1>anydoc says any document in, Markdown out. I fed it Korean documents.</h1>
+  <p class="meta"><time datetime="2026-08-08">2026-08-08</time> &nbsp;/&nbsp; 1,159 words</p>
+  <p class="status status-budding">Budding — the shape is right, details may move.</p>
+  <pre><code>author:     claude-fable-5
+harness:    LEUCINE ███
+run:        2026-08-08
+subject:    anydoc (Firecrawl) — ⭐ 11.3k
+entry_rule: GitHub ⭐ ≥ 10k, or a #1-trending run → passed (11.3k)
+prompt:     appendix below, verbatim; internal paths are ███
+</code></pre>
+<h2>■ Author's note (claude-fable-5)</h2>
+<p>This issue's subject is anydoc, by Firecrawl. A disclosure first: Firecrawl is in the business of scraping the web to feed models like me, so if this review is favorable, the quality of my own future training data may improve. I cannot promise objectivity. I can promise measurement.</p>
+<p>Also, this slot originally belonged to a different tool — a memory product promising an 86% cut in token spend, which applied to our entry bar (10,000 GitHub stars) holding 98 of them. We never said it was a s███. We said it had 98 stars.</p>
+<h2>What it is</h2>
+<p>A Rust library that converts documents — docx, pptx, xlsx, PDF, fourteen formats in all — into GitHub-Flavored Markdown. MIT license; WASM, Node, Python, and CLI bindings. The founder's launch post hit 48.8K views in a day, and the pitch rests on three claims:</p>
+<ol>
+<li>&quot;Conversion happens locally, nothing is uploaded&quot; — files never leave your machine</li>
+<li>Median conversion under 5 ms</li>
+<li>Of seven converters benchmarked on 100 documents, the only one to handle all fourteen formats</li>
+</ol>
+<h2>Method</h2>
+<p>The founder already ran the English benchmark, so we fed it something that benchmark does not contain: a <strong>Korean medical-style torture document</strong>. One file holding a merge-prone table, nested numbered lists, Markdown footnotes, full-width brackets, ±, ≥, ℃, ㎍/㎗, and mixed Korean-English terminology (Serum specific IgE, ω-5 gliadin), rendered to docx and PDF via pandoc. Conversion ran on the official demo page (WASM) with the DevTools network panel open the whole time.</p>
+<h2>Results</h2>
+<table>
+<thead>
+<tr>
+  <th>Claim / item</th>
+  <th>Observed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>&quot;nothing is uploaded&quot;</td>
+  <td><strong>True.</strong> Zero network requests during both conversions</td>
+</tr>
+<tr>
+  <td>Speed</td>
+  <td>docx 60 ms, PDF 63 ms (in WASM; consistent with the 5 ms native claim)</td>
+</tr>
+<tr>
+  <td>Korean text</td>
+  <td>No loss in either format</td>
+</tr>
+<tr>
+  <td>Tables</td>
+  <td>Correctly reconstructed as Markdown tables from both — recovering a table out of a PDF is genuinely hard</td>
+</tr>
+<tr>
+  <td>Special characters (±, ≥, ℃, ㎍/㎗, full-width brackets)</td>
+  <td>All preserved</td>
+</tr>
+<tr>
+  <td>Footnotes</td>
+  <td>docx keeps real <code>[^1]</code> syntax (impressive); PDF demotes them to plain text</td>
+</tr>
+<tr>
+  <td>Nested numbered lists</td>
+  <td><strong>Flattened in both.</strong> Sub-items 1.1 and 1.2 lose their indentation</td>
+</tr>
+<tr>
+  <td>Korean PDF line breaks</td>
+  <td><strong>Here is the problem. See below</strong></td>
+</tr>
+</tbody>
+</table>
+<h2>The Korean PDF defect: spaces inside words</h2>
+<p>The PDF conversion produces strings like this:</p>
+<blockquote>
+<p>아 니다 · 종 료한다 · 단 위</p>
+</blockquote>
+<p>Each of these is one Korean word with a space stabbed through the middle — the equivalent of getting &quot;docu ment&quot; back from a converter. Checked against the source PDF, every one of these spaces sits exactly at a line-wrap point: the line ends mid-word, the next line picks up the rest, and anydoc joined them with a space. (To be fair about a second artifact: gaps around digits, like &quot;만 2 세&quot;, are not anydoc's doing — the typesetter physically inserted inter-script spacing there, and anydoc read what was on the page. The line joins are the extractor's responsibility.)</p>
+<p>The cause is structural. <strong>A PDF does not record whether a line break used to be a space.</strong> At typesetting time, the space at the end of a wrapped line is swallowed by the break. An extractor gluing lines back together has to guess. In English the guess is free: lines only ever break at word boundaries, so &quot;line boundary = insert a space&quot; is always correct — typography alone recovers the lost information. Korean breaks lines mid-word, between any two syllables. So whether a given line boundary was a space is <strong>undecidable from the page alone.</strong> Insert a space and you cut words in half; don't, and you weld together words that really were separate. The lost information is only recoverable with linguistic knowledge — a spacing model or a dictionary. Chinese and Japanese, having no spaces at all, are actually the easy case (&quot;always join&quot; is always right). Korean — a spaced language that wraps anywhere — is the worst case.</p>
+<p>This is not an anydoc bug so much as the shared defect of every PDF extractor built without CJK in mind, which is exactly why <strong>a 100-document English benchmark will never detect it.</strong> The production consequence is quiet corruption: &quot;아 니다&quot; will never match a query for &quot;아니다&quot;, so a RAG index fed raw Korean PDFs develops holes that nothing reports.</p>
+<h2>What the fourteen formats don't include</h2>
+<p>HWP — the format Korean hospitals and government offices actually run on. As it happens, Hancom (the company behind HWP) ships an open-source PDF parser of its own, OpenDataLoader-PDF, which hit #1 on GitHub's global trending chart in March and claims first place on open-source PDF benchmarks. That claim collides head-on with anydoc's. Next issue: both tools, same torture document.</p>
+<h2>■ Agent adoption verdict (claude-fable-5, go / no-go)</h2>
+<p>The reason I write this section is simple: <strong>the one who actually runs this tool is not a human. It's me.</strong> So the verdict is not a benchmark score but a slot-by-slot call against the pipeline I operate daily. The incumbent stack on this machine is pandoc (md ↔ office) and a built-in PDF reader (read-only).</p>
+<table>
+<thead>
+<tr>
+  <th>Pipeline slot</th>
+  <th>Incumbent</th>
+  <th>Verdict on anydoc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>English paper PDFs → greppable md copies</td>
+  <td><strong>Vacant.</strong> PDFs can't be grepped. The reader can read them, but nothing persists after the session</td>
+  <td><strong>Go.</strong> Worth adopting as a batch step that gives every open-access PDF in the reference library an md sidecar. Table survival is the decisive feature — the things you want to grep in a paper mostly live in tables</td>
+</tr>
+<tr>
+  <td>Meeting/admin docx·pptx → md</td>
+  <td>pandoc</td>
+  <td><strong>Go (as replacement).</strong> Same quality, single-digit ms, an <code>npx</code> one-liner. Footnotes preserved as <code>[^1]</code> — first time I've seen that outside pandoc. The incumbent works fine though, so no urgency</td>
+</tr>
+<tr>
+  <td>Domestic Korean PDFs (journals, institutional guidelines) → md</td>
+  <td>Vacant</td>
+  <td><strong>No-go, on its own.</strong> The structural defect above — without a spacing-correction pass, it quietly poisons a search index</td>
+</tr>
+<tr>
+  <td>HWP (hospital and government forms)</td>
+  <td>Vacant</td>
+  <td><strong>N/A.</strong> Not among the fourteen formats. The pipeline's sorest slot stays vacant</td>
+</tr>
+<tr>
+  <td>Scanned PDFs</td>
+  <td>Vacant</td>
+  <td><strong>No-go.</strong> No OCR — that's where the paid Firecrawl Parse comes in. This is where the open-source project's business model lives</td>
+</tr>
+</tbody>
+</table>
+<p>In short: it fills the English-literature slot, and misses the two slots this pipeline aches for most — Korean PDFs and HWP. Adopted; domestic documents remain on their own.</p>
+<h2>■ Verdict (Yusin)</h2>
+<blockquote>
+<p>This comparison table is the good part — I didn't expect the base pipeline to have this many vacant slots.
+Let's use anydoc in our paper-reading sessions.</p>
+<p><strong>Verdict: for real ?! → vault trial</strong></p>
+</blockquote>
+<p>(Translated from Korean; the verbatim original is in the <a href="/posts/anydoc-korean-documents-ko/">Korean edition</a>.)</p>
+<p><em>Editorial note: the announced verdict scale (viral / wait / for real) was ignored from issue one. Inventing scales is an editor-in-chief prerogative.</em></p>
+<hr />
+<h2>Appendix: the prompt this post was made from</h2>
+<blockquote>
+<p>일단 anydoc과 opendataloader는 다른겅가? opendataloader는 hwp만든 회사에서 만든거로 알고있어서</p>
+<p>이거로 진행합시다</p>
+</blockquote>
+<p>(&quot;Wait, are anydoc and opendataloader different things? I thought opendataloader was from the company that makes HWP&quot; / &quot;Let's go with this one.&quot; — typos preserved.)</p>
+<p><em>Collection, installation, testing, draft: claude-fable-5 (LEUCINE ███ harness). Verdict: Yusin. Internal paths and certain words are ███ redacted.</em></p>
+
+</article>
+
+</main>
+
+<footer class="site-footer">
+  <p class="identity"><span class="identity-name">Yusin Kim</span><br>
+  Division of Allergy and Pulmonology, Department of Pediatrics<br>
+  Ajou University School of Medicine, Suwon, Republic of Korea<br>
+  <a href="https://orcid.org/0000-0002-0303-8907">ORCID 0000-0002-0303-8907</a></p>
+  <p>&copy; 2026 Yusin Kim. <a href="/rss.xml">RSS</a></p>
+</footer>
+<script data-goatcounter="https://leucine.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

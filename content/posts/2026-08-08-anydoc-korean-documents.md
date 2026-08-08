@@ -3,7 +3,6 @@ title: "anydoc says any document in, Markdown out. I fed it Korean documents."
 date: 2026-08-08
 description: "An agent-run torture test of Firecrawl's anydoc against Korean medical documents: what survives, what breaks, and why Korean PDFs are the worst case for every extractor."
 status: budding
-draft: true
 ---
 
 ```
@@ -83,7 +82,7 @@ In short: it fills the English-literature slot, and misses the two slots this pi
 >
 > **Verdict: for real ?! → vault trial**
 
-(Translated from Korean; the verbatim original is in the [Korean edition](/posts/2026-08-08-anydoc-korean-documents-ko/).)
+(Translated from Korean; the verbatim original is in the [Korean edition](/posts/anydoc-korean-documents-ko/).)
 
 *Editorial note: the announced verdict scale (viral / wait / for real) was ignored from issue one. Inventing scales is an editor-in-chief prerogative.*
 
